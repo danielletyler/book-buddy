@@ -1,0 +1,44 @@
+# Ignore Python cache folders (recursive)
+__pycache__/
+
+# Ignore Python compiled files
+*.py[cod]
+*.pyo
+*.pyd
+
+# Ignore virtual environment folders
+venv/
+.venv/
+ENV/
+env/
+
+# Ignore SQLite DB files (if you use SQLite)
+*.sqlite3
+*.db
+
+# Ignore Alembic migrations versions (optional)
+alembic/versions/
+
+# Ignore environment variable files
+.env
+.env.*
+
+# Ignore logs
+*.log
+
+# Ignore Uvicorn PID files
+*.pid
+
+# Ignore testing cache and coverage
+htmlcov/
+.coverage
+.tox/
+pytest_cache/
+*.cover
+
+# Ignore mypy cache
+.mypy_cache/
+
+# Ignore editor folders (optional if in root)
+.vscode/
+.idea/
