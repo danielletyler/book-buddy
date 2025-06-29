@@ -1,5 +1,5 @@
 from datetime import date
-from typing import List
+from typing import List, Optional
 from pydantic import BaseModel
 
 class BookBase(BaseModel):
@@ -8,7 +8,7 @@ class BookBase(BaseModel):
     authors: list[str]
     genres: list[str]
     description: str
-    cover_url: str
+    cover_url: Optional[str] = None
     published_year: int
 
 class BookRead(BookBase):
