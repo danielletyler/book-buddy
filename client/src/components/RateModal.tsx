@@ -17,7 +17,6 @@ interface RateModalProps {
       publishedDate: string;
     };
   };
-  show: boolean;
   onClose: () => void;
 }
 

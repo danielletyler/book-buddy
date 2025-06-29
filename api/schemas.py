@@ -38,6 +38,7 @@ class RatingUpdate(BaseModel):
 
 class RatingRead(RatingBase):
     id: int
+    book: BookBase
 
     class Config:
         orm_mode = True

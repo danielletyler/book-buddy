@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends
 from typing import Annotated, List
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 from database import get_db
 from schemas import RatingBase, RatingRead, RatingUpdate, RatingWithBook
 import models
@@ -20,7 +20,7 @@ async def rating_for_book(book_id: str, db: db_dependency):
 # get all ratings
 @router.get("/ratings", tags=["Ratings"], response_model=List[RatingRead])
 async def list_all_ratings(db: db_dependency):
-    result = db.query(models.Rating).all()
+    result = db.query(models.Rating).options(selectinload(models.Rating.book)).all()
     if not result:
         raise HTTPException(status_code=404, detail='Ratings not found')
     return result
