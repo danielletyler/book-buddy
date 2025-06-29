@@ -22,15 +22,37 @@ interface RateModalProps {
 }
 
 export const RateModal: React.FC<RateModalProps> = ({ book, onClose }) => {
-  const { data } = useGetRating(book?.id);
-  const { upsertRating } = useUpsertRating(book?.id);
+  const { data: fetchedRating } = useGetRating(book?.id);
+  const { upsertRating, data: upsertedRating } = useUpsertRating(book?.id);
 
   const [rating, setRating] = useState(0);
-  console.log(data);
+
+  const [ratingToDisplay, setRatingToDisplay] = useState(
+    upsertedRating || fetchedRating
+  );
+
+  console.log(ratingToDisplay);
+
+  // Initialize rating when fetched rating loads
+  useEffect(() => {
+    if (fetchedRating) {
+      setRating(fetchedRating.rating);
+      setRatingToDisplay(fetchedRating);
+    }
+  }, [fetchedRating]);
+
+  // Update rating when a new rating is upserted
+  useEffect(() => {
+    if (upsertedRating) {
+      setRating(upsertedRating.rating);
+      setRatingToDisplay(upsertedRating);
+    }
+  }, [upsertedRating]);
 
   useEffect(() => {
-    if (data) setRating(data?.rating);
-  }, [data]);
+    setRating(0);
+    setRatingToDisplay(null);
+  }, [book]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -125,9 +147,10 @@ export const RateModal: React.FC<RateModalProps> = ({ book, onClose }) => {
             </button>
           </form>
 
-          {data && (
+          {ratingToDisplay && (
             <p className="mb-4 text-sm text-green-600">
-              You rated this {data.rating} / 5 on {data.rated_at}.
+              You rated this {ratingToDisplay.rating} / 5 on{" "}
+              {ratingToDisplay.rated_at}.
             </p>
           )}
 
