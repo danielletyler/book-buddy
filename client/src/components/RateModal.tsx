@@ -2,27 +2,21 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { useGetRating } from "@/hooks/useGetRating";
 import { useUpsertRating } from "@/hooks/useUpsertRating";
+import { Book, Rating } from "@/types";
 
 interface RateModalProps {
-  book?: {
-    id: string;
-    volumeInfo: {
-      title: string;
-      description: string;
-      authors?: string[];
-      categories?: string[];
-      imageLinks: {
-        smallThumbnail: string;
-      };
-      publishedDate: string;
-    };
-  };
+  book?: Book;
   onClose: () => void;
+  onUpdate?: (updateRating: Rating) => void;
 }
 
-export const RateModal: React.FC<RateModalProps> = ({ book, onClose }) => {
-  const { data: fetchedRating } = useGetRating(book?.id);
-  const { upsertRating, data: upsertedRating } = useUpsertRating(book?.id);
+export const RateModal: React.FC<RateModalProps> = ({
+  book,
+  onClose,
+  onUpdate,
+}) => {
+  const { data: fetchedRating } = useGetRating(book?.api_id);
+  const { upsertRating, data: upsertedRating } = useUpsertRating(book?.api_id);
 
   const [rating, setRating] = useState(0);
   const [ratedAt, setRatedAt] = useState(null);
@@ -54,17 +48,7 @@ export const RateModal: React.FC<RateModalProps> = ({ book, onClose }) => {
     if (!book) return; // guard against undefined
 
     const payload = {
-      book: {
-        api_id: book.id,
-        title: book.volumeInfo.title,
-        authors: book.volumeInfo.authors ?? [],
-        genres: book.volumeInfo.categories, // add empty arrays if required
-        description: book.volumeInfo.description,
-        cover_url: book.volumeInfo.imageLinks?.smallThumbnail ?? "",
-        published_year: book.volumeInfo.publishedDate
-          ? parseInt(book.volumeInfo.publishedDate.slice(0, 4))
-          : 0,
-      },
+      book,
       rating: {
         rating,
         rating_scale: 5,
@@ -74,8 +58,9 @@ export const RateModal: React.FC<RateModalProps> = ({ book, onClose }) => {
     };
 
     try {
-      await upsertRating(payload);
+      const res = await upsertRating(payload);
       // maybe set submitted state here or show a message
+      onUpdate(res);
     } catch (error) {
       console.error("Failed to submit rating:", error);
       // handle error UI here
@@ -106,7 +91,7 @@ export const RateModal: React.FC<RateModalProps> = ({ book, onClose }) => {
             ✕
           </button>
 
-          <h2 className="mb-4 text-xl font-bold">{book.volumeInfo.title}</h2>
+          <h2 className="mb-4 text-xl font-bold">{book.title}</h2>
 
           {/* Rating form */}
           <form onSubmit={handleSubmit} className="mb-6 flex gap-4">
@@ -151,10 +136,10 @@ export const RateModal: React.FC<RateModalProps> = ({ book, onClose }) => {
           <section className="space-y-3 text-sm">
             <div className="mb-4 flex justify-start">
               <div>
-                {book?.volumeInfo?.imageLinks?.smallThumbnail ? (
+                {book.cover_url ? (
                   <Image
-                    src={book.volumeInfo.imageLinks.smallThumbnail}
-                    alt={`${book.volumeInfo.title} cover`}
+                    src={book.cover_url}
+                    alt={`${book.title} cover`}
                     width={128} // adjust as needed
                     height={192}
                     className="rounded shadow"
@@ -169,21 +154,21 @@ export const RateModal: React.FC<RateModalProps> = ({ book, onClose }) => {
             </div>
             <div>
               <p className="font-bold">Authors</p>
-              {book.volumeInfo.authors?.map((a, i) => <p key={i}>{a}</p>) || (
+              {book.authors?.map((a, i) => <p key={i}>{a}</p>) || (
                 <p>Unknown author</p>
               )}
             </div>
 
             <div>
-              <p className="font-bold">Categories</p>
-              {book.volumeInfo.categories?.map((c, i) => (
+              <p className="font-bold">Genres</p>
+              {book.genres?.map((c, i) => (
                 <p key={i}>{c}</p>
               ))}
             </div>
 
             <div>
               <p className="font-bold">Description</p>
-              <p>{book.volumeInfo.description}</p>
+              <p>{book.description}</p>
             </div>
           </section>
         </div>

@@ -17,4 +17,33 @@ async def search_google_books(q: str, max_results: int = 10):
     async with httpx.AsyncClient() as client:
         r = await client.get("https://www.googleapis.com/books/v1/volumes", params=params)
     r.raise_for_status()
-    return r.json()
+
+    raw_items = r.json().get("items", [])
+    results: list[BookBase] = []
+
+    for item in raw_items:
+        info = item.get("volumeInfo", {})
+
+        published_date = info.get("publishedDate")
+
+        cover_url = None
+        image_links = info.get("imageLinks", {})
+        # Prefer smallThumbnail if available, fallback to thumbnail
+        if image_links.get("smallThumbnail"):
+            cover_url = image_links.get("smallThumbnail")
+        elif image_links.get("thumbnail"):
+            cover_url = image_links.get("thumbnail")
+
+        results.append(
+            BookBase(
+                api_id=item.get("id"),
+                title=info.get("title") or "Untitled",
+                description=info.get("description") or "Untitled",
+                authors=info.get("authors") or [],
+                genres=info.get("categories") or [],
+                published_year=int(published_date[:4]),
+                cover_url=cover_url,
+            )
+        )
+
+    return results

@@ -21,7 +21,7 @@ export function useBookSearch(query: string) {
           throw new Error("Failed to fetch search results");
         }
         const json: [] = await res.json();
-        if (!cancelled) setData(json.items);
+        if (!cancelled) setData(json);
       } catch (err) {
         if (!cancelled) setError(err as Error);
       } finally {

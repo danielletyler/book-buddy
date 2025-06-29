@@ -3,10 +3,11 @@
 import React, { useState } from "react";
 import { useBookSearch } from "@/hooks/useBookSearch";
 import { RateModal } from "../../components/RateModal";
+import { Book } from "@/types";
 
 const Search = () => {
   const [inputValue, setInputValue] = useState(""); // controlled input field
-  const [selectedBook, setSelectedBook] = useState(undefined);
+  const [selectedBook, setSelectedBook] = useState<Book | undefined>(undefined);
   const [query, setQuery] = useState(""); // triggers search
   const { data: books, loading, error } = useBookSearch(query);
 
@@ -38,15 +39,15 @@ const Search = () => {
       {error && <p className="mt-4 text-red-600">Error: {error.message}</p>}
 
       <div className="mt-4 space-y-1">
-        {books.map((b) => (
+        {books.map((b: Book) => (
           <div
-            key={b.id}
+            key={b.api_id}
             onClick={() => setSelectedBook(b)}
             className="hover:cursor-pointer hover:underline"
           >
-            <strong>{b.volumeInfo.title}</strong>
+            <strong>{b.title}</strong>
             {" — "}
-            {b.volumeInfo.authors?.join(", ") ?? "Unknown author"}
+            {b.authors?.join(", ") ?? "Unknown author"}
           </div>
         ))}
       </div>

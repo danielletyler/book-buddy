@@ -1,14 +1,32 @@
 "use client";
 import Image from "next/image";
 import { useGetRatings } from "@/hooks/useGetRatings";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { RateModal } from "@/components/RateModal";
+import { Rating, Book } from "@/types";
 
 const Bookshelf = () => {
-  const { data } = useGetRatings();
-  const [selectedBook, setSelectedBook] = useState(undefined);
+  const { data: initialRatings } = useGetRatings();
 
-  if (!data?.length) return <p className="text-center mt-8">No ratings yet.</p>;
+  const [selectedBook, setSelectedBook] = useState<Book | undefined>(undefined);
+  const [ratings, setRatings] = useState<Rating[]>([]);
+
+  useEffect(() => {
+    if (initialRatings) setRatings(initialRatings);
+  }, [initialRatings]);
+
+  console.log(ratings);
+
+  // Update a rating in state after modal change
+  const handleRatingUpdate = (updatedRating: Rating) => {
+    console.log("handle");
+    setRatings((prev) =>
+      prev.map((r) => (r.id === updatedRating.id ? updatedRating : r))
+    );
+  };
+
+  if (!ratings?.length)
+    return <p className="text-center mt-8">No ratings yet.</p>;
 
   return (
     <section className="mx-auto max-w-5xl px-4 py-8">
@@ -16,7 +34,7 @@ const Bookshelf = () => {
 
       {/* Responsive grid: 1‑col on mobile, 2‑col on md, 3‑col on lg */}
       <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {data.map((rating) => (
+        {ratings.map((rating) => (
           <li
             key={rating.id}
             className="rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow"
@@ -47,7 +65,7 @@ const Bookshelf = () => {
 
               <p className="text-xs text-gray-500">
                 {rating.book.genres?.join(", ") || "Uncategorized"} •{" "}
-                {rating.book.publish_year || "N/A"}
+                {rating.book.published_year || "N/A"}
               </p>
 
               <p className="mt-2 font-semibold">
@@ -63,6 +81,7 @@ const Bookshelf = () => {
       <RateModal
         book={selectedBook}
         onClose={() => setSelectedBook(undefined)}
+        onUpdate={handleRatingUpdate}
       />
     </section>
   );
