@@ -60,7 +60,7 @@ export const RateModal: React.FC<RateModalProps> = ({
     try {
       const res = await upsertRating(payload);
       // maybe set submitted state here or show a message
-      onUpdate(res);
+      onUpdate?.(res);
     } catch (error) {
       console.error("Failed to submit rating:", error);
       // handle error UI here
