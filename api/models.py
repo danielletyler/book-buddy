@@ -12,7 +12,7 @@ class Book(Base):
   cover_url = Column(String, index=True)
   authors = Column(ARRAY(String), index=True)
   genres = Column(ARRAY(String), index=True)
-  topics = Column(ARRAY(String), index=True)
+  description = Column(String, index=True)
   published_year = Column(Integer, index=True)
 
   rating = relationship("Rating", back_populates="book")

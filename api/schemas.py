@@ -7,7 +7,7 @@ class BookBase(BaseModel):
     title: str
     authors: list[str]
     genres: list[str]
-    topics: list[str]
+    description: str
     cover_url: str
     published_year: int
 

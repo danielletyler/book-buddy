@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 // Pydantic models:
-// interface BookInfo { api_id: string; title?: string; authors?: string[]; genres?: string[]; topics?: string[]; cover_url?: string; published_year?: number; }
+// interface BookInfo { api_id: string; title?: string; authors?: string[]; genres?: string[]; description?: string; cover_url?: string; published_year?: number; }
 // interface RatingBase { rating: number; rating_scale: number; notes: string; rated_at: string; }
 
 // Combine both into one payload
@@ -11,7 +11,7 @@ export interface UpsertRatingPayload {
     title?: string;
     authors?: string[];
     genres?: string[];
-    topics?: string[];
+    description: string;
     cover_url?: string;
     published_year?: number;
   };

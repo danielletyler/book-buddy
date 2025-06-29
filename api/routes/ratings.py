@@ -84,7 +84,7 @@ async def upsert_rating(
             title=book_data.title or "Unknown",
             authors=book_data.authors or [],
             genres=book_data.genres or [],
-            topics=book_data.topics or [],
+            description=book_data.description or "",
             cover_url=book_data.cover_url or "",
             published_year=book_data.published_year or 0,
         )

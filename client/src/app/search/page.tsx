@@ -15,10 +15,6 @@ const Search = () => {
     setQuery(inputValue); // only search on submit
   }
 
-  const handleClick = (b) => {
-    setSelectedBook(b);
-  };
-
   return (
     <div className="p-4">
       <h1 className="text-xl font-bold mb-2">Search Books</h1>
@@ -45,7 +41,7 @@ const Search = () => {
         {books.map((b) => (
           <div
             key={b.id}
-            onClick={() => handleClick(b)}
+            onClick={() => setSelectedBook(b)}
             className="hover:cursor-pointer hover:underline"
           >
             <strong>{b.volumeInfo.title}</strong>

@@ -59,7 +59,7 @@ export const RateModal: React.FC<RateModalProps> = ({ book, onClose }) => {
         title: book.volumeInfo.title,
         authors: book.volumeInfo.authors ?? [],
         genres: book.volumeInfo.categories, // add empty arrays if required
-        topics: [],
+        description: book.volumeInfo.description,
         cover_url: book.volumeInfo.imageLinks?.smallThumbnail ?? "",
         published_year: book.volumeInfo.publishedDate
           ? parseInt(book.volumeInfo.publishedDate.slice(0, 4))
@@ -151,14 +151,20 @@ export const RateModal: React.FC<RateModalProps> = ({ book, onClose }) => {
           <section className="space-y-3 text-sm">
             <div className="mb-4 flex justify-start">
               <div>
-                <Image
-                  src={book.volumeInfo.imageLinks.smallThumbnail}
-                  alt={`${book.volumeInfo.title} cover`}
-                  width={128} // adjust as needed
-                  height={192}
-                  className="rounded shadow"
-                  unoptimized // remove if you configure remotePatterns in next.config.js
-                />
+                {book?.volumeInfo?.imageLinks?.smallThumbnail ? (
+                  <Image
+                    src={book.volumeInfo.imageLinks.smallThumbnail}
+                    alt={`${book.volumeInfo.title} cover`}
+                    width={128} // adjust as needed
+                    height={192}
+                    className="rounded shadow"
+                    unoptimized // remove if you configure remotePatterns in next.config.js
+                  />
+                ) : (
+                  <div className="flex h-full items-center justify-center bg-gray-100 text-gray-400">
+                    No cover
+                  </div>
+                )}
               </div>
             </div>
             <div>
