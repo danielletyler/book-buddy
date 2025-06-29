@@ -2,19 +2,19 @@ from fastapi import APIRouter, HTTPException, Depends
 from typing import Annotated, List
 from sqlalchemy.orm import Session
 from database import get_db
-from schemas import RatingBase, RatingRead, RatingUpdate
+from schemas import RatingBase, RatingRead, RatingUpdate, RatingWithBook
 import models
 
 router = APIRouter()
 
 db_dependency = Annotated[Session, Depends(get_db)]
 
-# get all ratings on book
-@router.get("/books/{book_id}/ratings", tags=["Ratings"], response_model=List[RatingRead])
-async def ratings_for_book(book_id: int, db: db_dependency):
-    result = db.query(models.Rating).filter(models.Rating.book_id == book_id).all()
+# get rating on book
+@router.get("/books/{book_id}/rating", tags=["Ratings"], response_model=RatingRead)
+async def rating_for_book(book_id: str, db: db_dependency):
+    result = db.query(models.Rating).filter(models.Rating.book_id == book_id).first()
     if not result:
-        raise HTTPException(status_code=404, detail='Ratings not found')
+        raise HTTPException(status_code=404, detail='Rating is not found')
     return result
 
 # get all ratings
@@ -33,7 +33,6 @@ async def get_rating(rating_id: int, db: db_dependency):
     if not result:
         raise HTTPException(status_code=404, detail='Rating is not found')
     return result
-
 
 # create rating
 @router.post("/ratings", tags=["Ratings"], response_model=RatingRead)
@@ -68,3 +67,47 @@ async def delete_rating(rating_id: int, db: db_dependency):
     db.delete(rating)
     db.commit()
     return
+
+@router.post("/books/{book_id}/rating", response_model=RatingRead)
+async def upsert_rating(
+    book_id: str,
+    payload: RatingWithBook,
+    db: Session = Depends(get_db),
+):
+    book_data = payload.book
+    rating_data = payload.rating
+
+    book = db.query(models.Book).filter(models.Book.api_id == book_id).first()
+    if not book:
+        book = models.Book(
+            api_id=book_data.api_id,
+            title=book_data.title or "Unknown",
+            authors=book_data.authors or [],
+            genres=book_data.genres or [],
+            topics=book_data.topics or [],
+            cover_url=book_data.cover_url or "",
+            published_year=book_data.published_year or 0,
+        )
+        db.add(book)
+        db.commit()
+        db.refresh(book)
+
+    rating = db.query(models.Rating).filter(models.Rating.book_id == book.api_id).first()
+    if rating:
+        rating.rating = rating_data.rating
+        rating.rating_scale = rating_data.rating_scale
+        rating.notes = rating_data.notes
+        rating.rated_at = rating_data.rated_at
+    else:
+        rating = models.Rating(
+            book_id=book.api_id,
+            rating=rating_data.rating,
+            rating_scale=rating_data.rating_scale,
+            notes=rating_data.notes,
+            rated_at=rating_data.rated_at,
+        )
+        db.add(rating)
+
+    db.commit()
+    db.refresh(rating)
+    return rating

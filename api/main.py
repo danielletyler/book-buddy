@@ -7,7 +7,7 @@ from routes import books, ratings, books_api
 app = FastAPI()
 
 origins = [
-    "http://localhost:5173",  # your frontend URL
+    "http://localhost:3000",  # your frontend URL
 ]
 
 app.add_middleware(

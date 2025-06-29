@@ -29,7 +29,7 @@ async def get_book(book_id: int, db: db_dependency):
 # create a book
 @router.post("/books", tags=["Books"], response_model=BookRead)
 async def create_books(book: BookBase, db: db_dependency):
-    db_book = models.Book(title=book.title, authors=book.authors, cover_url=book.cover_url, genres=book.genres, topics=book.topics, published_year=book.published_year)
+    db_book = models.Book(api_id=book.api_id, title=book.title, authors=book.authors, cover_url=book.cover_url, genres=book.genres, topics=book.topics, published_year=book.published_year)
     db.add(db_book)
     db.commit()
     return db_book

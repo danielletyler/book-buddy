@@ -7,6 +7,7 @@ class Book(Base):
   __tablename__ = 'books'
 
   id = Column(Integer, primary_key=True, index=True)
+  api_id = Column(String,  unique=True, nullable=False)
   title = Column(String, index=True)
   cover_url = Column(String, index=True)
   authors = Column(ARRAY(String), index=True)
@@ -20,7 +21,7 @@ class Rating(Base):
   __tablename__ = 'ratings'
 
   id = Column(Integer, primary_key=True, index=True)
-  book_id = Column(Integer, ForeignKey("books.id"))
+  book_id = Column(String, ForeignKey("books.api_id"))
   rating = Column(Integer, index=True)
   rating_scale = Column(Integer, index=True)
   notes = Column(String, index=True)
