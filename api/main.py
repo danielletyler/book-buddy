@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from database import engine
 import models
-from routes import books, ratings, books_api
+from routes import books, ratings, books_api, insights
 
 app = FastAPI()
 
@@ -23,9 +23,4 @@ models.Base.metadata.create_all(bind=engine)
 app.include_router(books.router)
 app.include_router(ratings.router)
 app.include_router(books_api.router)
-# app.include_router(budgets.router)
-# app.include_router(categories.router)
-# app.include_router(payees.router)
-# app.include_router(targets.router)
-# app.include_router(transactions.router)
-# app.include_router(monthly_assignments.router)
+app.include_router(insights.router)

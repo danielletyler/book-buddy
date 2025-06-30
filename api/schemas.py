@@ -43,7 +43,23 @@ class RatingRead(RatingBase):
     class Config:
         orm_mode = True
 
-
 class RatingWithBook(BaseModel):
     book: BookBase
     rating: RatingUpsert
+
+
+class GenreAvg(BaseModel):
+    genre: str
+    avg_rating: float
+
+class AuthorAvg(BaseModel):
+    author: str
+    avg_rating: float
+
+class GenreCount(BaseModel):
+    genre: str
+    num_ratings: int
+
+class AuthorCount(BaseModel):
+    author: str
+    num_ratings: int
