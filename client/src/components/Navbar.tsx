@@ -2,34 +2,26 @@ import Link from "next/link";
 
 const Navbar = () => {
   return (
-    <nav className="bg-gray-100 shadow p-4">
-      <div className="container mx-auto flex items-center justify-between">
-        <div>
-          <Link
-            href="/search"
-            className="text-blue-600 font-semibold hover:underline"
-          >
-            Search
-          </Link>
-        </div>
-        <ul className="flex space-x-6">
-          <li>
-            <Link
-              href="/bookshelf"
-              className="text-gray-700 hover:text-blue-600 hover:underline"
-            >
-              Bookshelf
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/insights"
-              className="text-gray-700 hover:text-blue-600 hover:underline"
-            >
-              Insights
-            </Link>
-          </li>
-        </ul>
+    <nav className="bg-white border-b border-gray-200">
+      <div className="max-w-7xl mx-auto px-6 py-4 flex justify-end items-center space-x-10">
+        <Link
+          href="/search"
+          className="text-gray-600 text-base font-medium hover:text-indigo-600 transition duration-200 ease-in-out"
+        >
+          Search
+        </Link>
+        <Link
+          href="/bookshelf"
+          className="text-gray-600 text-base font-medium hover:text-indigo-600 transition duration-200 ease-in-out"
+        >
+          Bookshelf
+        </Link>
+        <Link
+          href="/insights"
+          className="text-gray-600 text-base font-medium hover:text-indigo-600 transition duration-200 ease-in-out"
+        >
+          Insights
+        </Link>
       </div>
     </nav>
   );
