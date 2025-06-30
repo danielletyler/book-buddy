@@ -3,7 +3,8 @@ import React, { useEffect, useState } from "react";
 import { useGetRating } from "@/hooks/useGetRating";
 import { useUpsertRating } from "@/hooks/useUpsertRating";
 import { Book, Rating } from "@/types";
-
+import { FaTrashAlt } from "react-icons/fa";
+import { useDeleteRating } from "@/hooks/useDeleteRating";
 interface RateModalProps {
   book?: Book;
   onClose: () => void;
@@ -17,9 +18,16 @@ export const RateModal: React.FC<RateModalProps> = ({
 }) => {
   const { data: fetchedRating } = useGetRating(book?.api_id);
   const { upsertRating, data: upsertedRating } = useUpsertRating(book?.api_id);
+  const { deleteRating } = useDeleteRating();
 
   const [rating, setRating] = useState(0);
   const [ratedAt, setRatedAt] = useState(null);
+
+  const handleDeleteRating = () => {
+    deleteRating(fetchedRating?.id);
+    setRating(0);
+    setRatedAt(null);
+  };
 
   // Initialize rating when fetched rating loads
   useEffect(() => {
@@ -127,9 +135,15 @@ export const RateModal: React.FC<RateModalProps> = ({
           </form>
 
           {ratedAt && (
-            <p className="mb-4 text-sm text-green-600">
-              You rated this {rating} / 5 on {ratedAt}.
-            </p>
+            <div className="flex gap-4">
+              <p className="mb-4 text-sm text-green-600">
+                You rated this {rating} / 5 on {ratedAt}.
+              </p>
+              <FaTrashAlt
+                onClick={handleDeleteRating}
+                className="text-red-500 hover:text-red-700"
+              />
+            </div>
           )}
 
           {/* Book details */}

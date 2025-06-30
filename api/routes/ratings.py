@@ -58,7 +58,7 @@ async def update_rating(rating_id: int, rating_update: RatingUpdate, db: db):
     return rating
 
 # delete a rating
-@router.delete("/rating/{rating_id}", tags=["Ratings"])
+@router.delete("/ratings/{rating_id}", tags=["Ratings"])
 async def delete_rating(rating_id: int, db: db):
     rating = db.query(models.Rating).filter(models.Rating.id == rating_id).first()
     if rating is None:
