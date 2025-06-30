@@ -1,4 +1,3 @@
-// src/hooks/useBookSearch.ts
 import { useEffect, useState } from "react";
 
 export function useBookSearch(query: string) {
@@ -7,8 +6,8 @@ export function useBookSearch(query: string) {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!query) return; // guard for empty input
-    let cancelled = false; // prevents state updates after unmount
+    if (!query) return;
+    let cancelled = false;
 
     async function fetchBooks() {
       setLoading(true);

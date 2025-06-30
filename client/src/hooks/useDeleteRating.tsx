@@ -1,4 +1,3 @@
-// src/hooks/useDeleteRating.ts
 import { useState } from "react";
 
 export function useDeleteRating() {

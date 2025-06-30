@@ -21,15 +21,16 @@ export const RateModal: React.FC<RateModalProps> = ({
   const { deleteRating } = useDeleteRating();
 
   const [rating, setRating] = useState(0);
-  const [ratedAt, setRatedAt] = useState(null);
+  const [ratedAt, setRatedAt] = useState<string | null>(null);
 
   const handleDeleteRating = () => {
-    deleteRating(fetchedRating?.id);
-    setRating(0);
-    setRatedAt(null);
+    if (fetchedRating?.id) {
+      deleteRating(fetchedRating.id);
+      setRating(0);
+      setRatedAt(null);
+    }
   };
 
-  // Initialize rating when fetched rating loads
   useEffect(() => {
     if (fetchedRating) {
       setRating(fetchedRating.rating);
@@ -37,7 +38,6 @@ export const RateModal: React.FC<RateModalProps> = ({
     }
   }, [fetchedRating]);
 
-  // Update rating when a new rating is upserted
   useEffect(() => {
     if (upsertedRating) {
       setRating(upsertedRating.rating);
@@ -53,10 +53,13 @@ export const RateModal: React.FC<RateModalProps> = ({
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    if (!book) return; // guard against undefined
+    if (!book) return;
 
     const payload = {
-      book,
+      book: {
+        ...book,
+        published_year: Number(book.published_year),
+      },
       rating: {
         rating,
         rating_scale: 5,
@@ -67,11 +70,9 @@ export const RateModal: React.FC<RateModalProps> = ({
 
     try {
       const res = await upsertRating(payload);
-      // maybe set submitted state here or show a message
       onUpdate?.(res);
     } catch (error) {
       console.error("Failed to submit rating:", error);
-      // handle error UI here
     }
   }
 
@@ -154,10 +155,10 @@ export const RateModal: React.FC<RateModalProps> = ({
                   <Image
                     src={book.cover_url}
                     alt={`${book.title} cover`}
-                    width={128} // adjust as needed
+                    width={128}
                     height={192}
                     className="rounded shadow"
-                    unoptimized // remove if you configure remotePatterns in next.config.js
+                    unoptimized
                   />
                 ) : (
                   <div className="flex h-full items-center justify-center bg-gray-100 text-gray-400">

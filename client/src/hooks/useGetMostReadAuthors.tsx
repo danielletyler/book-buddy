@@ -1,4 +1,3 @@
-// src/hooks/useBookSearch.ts
 import { AuthorCount } from "@/types";
 import { useEffect, useState } from "react";
 

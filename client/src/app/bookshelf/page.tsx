@@ -15,9 +15,6 @@ const Bookshelf = () => {
     if (initialRatings) setRatings(initialRatings);
   }, [initialRatings]);
 
-  console.log(ratings);
-
-  // Update a rating in state after modal change
   const handleRatingUpdate = (updatedRating: Rating) => {
     console.log("handle");
     setRatings((prev) =>
@@ -47,7 +44,7 @@ const Bookshelf = () => {
                   alt={`${rating.book.title} cover`}
                   fill
                   className="object-cover"
-                  unoptimized // remove if you configure remotePatterns in next.config.js
+                  unoptimized
                 />
               ) : (
                 <div className="flex h-full items-center justify-center bg-gray-100 text-gray-400">

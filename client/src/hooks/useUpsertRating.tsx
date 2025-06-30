@@ -1,10 +1,5 @@
+import { Rating } from "@/types";
 import { useState } from "react";
-
-// Pydantic models:
-// interface BookInfo { api_id: string; title?: string; authors?: string[]; genres?: string[]; description?: string; cover_url?: string; published_year?: number; }
-// interface RatingBase { rating: number; rating_scale: number; notes: string; rated_at: string; }
-
-// Combine both into one payload
 export interface UpsertRatingPayload {
   book: {
     api_id: string;
@@ -19,25 +14,15 @@ export interface UpsertRatingPayload {
     rating: number;
     rating_scale: number;
     notes: string;
-    rated_at: string; // ISO date string
+    rated_at: string;
   };
 }
 
-export interface RatingRead {
-  id: number;
-  book_id: string;
-  rating: number;
-  rating_scale: number;
-  notes: string;
-  rated_at: string;
-}
-
-export function useUpsertRating(bookId: string) {
-  const [data, setData] = useState<RatingRead | null>(null);
+export function useUpsertRating(bookId?: string) {
+  const [data, setData] = useState<Rating | null>(null);
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(false);
 
-  /** Call this with combined book + rating data */
   const upsertRating = async (payload: UpsertRatingPayload) => {
     console.log(payload);
     setLoading(true);
@@ -53,7 +38,7 @@ export function useUpsertRating(bookId: string) {
         throw new Error(`Failed to upsert rating: ${res.status}`);
       }
 
-      const json: RatingRead = await res.json();
+      const json: Rating = await res.json();
       setData(json);
       return json;
     } catch (err) {

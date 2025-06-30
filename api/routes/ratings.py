@@ -68,6 +68,7 @@ async def delete_rating(rating_id: int, db: db):
     db.commit()
     return
 
+# upsert a rating and book
 @router.post("/books/{book_id}/rating", response_model=RatingRead)
 async def upsert_rating(
     book_id: str,

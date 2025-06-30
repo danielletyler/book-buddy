@@ -1,4 +1,3 @@
-// src/hooks/useBookSearch.ts
 import { AuthorAvg } from "@/types";
 import { useEffect, useState } from "react";
 

@@ -6,6 +6,15 @@ export type Rating = {
   rating: number;
   rating_scale: number;
   notes: string;
-  rated_at: Date;
+  rated_at: string;
+  book: Book;
+};
+
+export type RatingRead = {
+  id: number;
+  rating: number;
+  rating_scale: number;
+  notes: string;
+  rated_at: string;
   book: Book;
 };

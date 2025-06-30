@@ -6,14 +6,14 @@ import { RateModal } from "../../components/RateModal";
 import { Book } from "@/types";
 
 const Search = () => {
-  const [inputValue, setInputValue] = useState(""); // controlled input field
+  const [inputValue, setInputValue] = useState("");
   const [selectedBook, setSelectedBook] = useState<Book | undefined>(undefined);
-  const [query, setQuery] = useState(""); // triggers search
+  const [query, setQuery] = useState("");
   const { data: books = [], loading, error } = useBookSearch(query);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setQuery(inputValue); // only search on submit
+    setQuery(inputValue);
   }
 
   return (

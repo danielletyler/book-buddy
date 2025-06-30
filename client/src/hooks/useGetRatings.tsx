@@ -1,12 +1,13 @@
+import { Rating } from "@/types";
 import { useEffect, useState } from "react";
 
 export function useGetRatings() {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState<Rating[] | null>(null);
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    let cancelled = false; // prevents state updates after unmount
+    let cancelled = false;
 
     async function fetchRatings() {
       setLoading(true);
@@ -15,7 +16,7 @@ export function useGetRatings() {
         if (!res.ok) {
           throw new Error("Failed to fetch ratings");
         }
-        const json: [] = await res.json();
+        const json: Rating[] = await res.json();
         if (!cancelled) setData(json);
       } catch (err) {
         if (!cancelled) setError(err as Error);
