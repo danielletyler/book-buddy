@@ -16,10 +16,13 @@ const Bookshelf = () => {
   }, [initialRatings]);
 
   const handleRatingUpdate = (updatedRating: Rating) => {
-    console.log("handle");
     setRatings((prev) =>
       prev.map((r) => (r.id === updatedRating.id ? updatedRating : r))
     );
+  };
+
+  const handleRatingDelete = (deletedRatingId: number) => {
+    setRatings((prev) => prev.filter((r) => r.id !== deletedRatingId));
   };
 
   if (!ratings?.length)
@@ -79,6 +82,7 @@ const Bookshelf = () => {
         book={selectedBook}
         onClose={() => setSelectedBook(undefined)}
         onUpdate={handleRatingUpdate}
+        onDelete={handleRatingDelete}
       />
     </section>
   );

@@ -8,12 +8,14 @@ import { useDeleteRating } from "@/hooks/useDeleteRating";
 interface RateModalProps {
   book?: Book;
   onClose: () => void;
+  onDelete?: (deletedRating: number) => void;
   onUpdate?: (updateRating: Rating) => void;
 }
 
 export const RateModal: React.FC<RateModalProps> = ({
   book,
   onClose,
+  onDelete,
   onUpdate,
 }) => {
   const { data: fetchedRating } = useGetRating(book?.api_id);
@@ -22,14 +24,6 @@ export const RateModal: React.FC<RateModalProps> = ({
 
   const [rating, setRating] = useState(0);
   const [ratedAt, setRatedAt] = useState<string | null>(null);
-
-  const handleDeleteRating = () => {
-    if (fetchedRating?.id) {
-      deleteRating(fetchedRating.id);
-      setRating(0);
-      setRatedAt(null);
-    }
-  };
 
   useEffect(() => {
     if (fetchedRating) {
@@ -50,7 +44,17 @@ export const RateModal: React.FC<RateModalProps> = ({
     setRatedAt(null);
   }, [book]);
 
-  async function handleSubmit(e: React.FormEvent) {
+  const handleDeleteRating = () => {
+    const id = fetchedRating?.id;
+    if (id) {
+      deleteRating(fetchedRating.id);
+      setRating(0);
+      setRatedAt(null);
+      onDelete?.(id);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!book) return;
@@ -74,7 +78,7 @@ export const RateModal: React.FC<RateModalProps> = ({
     } catch (error) {
       console.error("Failed to submit rating:", error);
     }
-  }
+  };
 
   if (!book) return null;
 
